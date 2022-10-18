@@ -36,13 +36,10 @@ public:
       }
       RCLCPP_INFO(get_logger(), "waiting for service to appear...");
     }
-
-    internal_executor_.add_node(this->get_node_base_interface());
   }
 private:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Client<AddTwoInts>::SharedPtr client_;
-  rclcpp::executors::SingleThreadedExecutor internal_executor_;
 
   void timer_callback(){
     auto request = std::make_shared<AddTwoInts::Request>();
@@ -52,7 +49,7 @@ private:
 
     RCLCPP_INFO(get_logger(), "Request sent, waiting...");
 
-    if(result_future.wait_for(5s) != std::future_status::ready) //(internal_executor_.spin_until_future_complete(result_future, 5s) !=rclcpp::FutureReturnCode::SUCCESS)  // 
+    if(result_future.wait_for(5s) != std::future_status::ready)
     {
       RCLCPP_ERROR(get_logger(), "service call failed :(");
       return;
